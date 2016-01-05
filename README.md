@@ -48,7 +48,7 @@ An example (which only halts when reading a `0` in state `4`):
 |      1|1L2     |1L1     |
 |      2|1L3     |0R4     |
 |      3|1R0     |1R3     |
-|      4|1L5     |OR0     |
+|      4|1L5     |0R0     |
 
 ### Would a different definition be better?
 
