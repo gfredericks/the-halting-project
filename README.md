@@ -40,7 +40,7 @@ Each state specifies the machine's behavior based on the value read
 from the current position in the tape. E.g., `1L1` means "write a `1`,
 move left, and transition to state `1`.
 
-An example:
+An example (which only halts when reading a `0` in state `4`):
 
 | State | Read 0 | Read 1 |
 |------:|:-------|:-------|
