@@ -1,19 +1,6 @@
 (ns halting.machines)
 
-;; (require '[clojure.test.check.generators :as gen])
-;; (require '[clojure.set :as sets])
 
-;; (defn gen-TM-state
-;;   [total-states]
-;;   (gen/vector (gen/tuple (gen/choose 0 1)
-;;                          (gen/elements [:left :right])
-;;                          (gen/choose 0 total-states))
-;;               2))
-
-;; (def gen-TM
-;;   (gen/bind gen/nat
-;;             (fn [state-count]
-;;               (gen/vector (gen-TM-state state-count) state-count))))
 
 (def the-empty-machine
   [])
@@ -69,8 +56,26 @@
 
 (defn machine->nat
   [machine]
-  ;; TODO
-  )
+  (->> (range (count machine))
+       (map total-machines-for-state-count)
+       (reduce +')
+       (+ (let [base (number-of-state-specs (count machine))
+                to-states (inc (count machine))]
+            (->> machine
+                 (map (fn [[[write0 dir0 state0]
+                            [write1 dir1 state1]]]
+                        (-> write0
+                            (* 2)
+                            (+ ({:left 0 :right 1} dir0))
+                            (* to-states)
+                            (+ state0)
+                            (* 2)
+                            (+ write1)
+                            (* 2)
+                            (+ ({:left 0 :right 1} dir1))
+                            (* to-states)
+                            (+ state1))))
+                 (reduce #(-> %1 (*' base) (+' %2)) 0))))))
 
 (defn inc-machine
   [machine]
@@ -97,22 +102,29 @@
                          (if (or (zero? state)
                                  (= (count TM) state))
                            state
-                           (nth perm (dec state)))])
+                           (inc (.indexOf ^java.util.List perm state)))])
                       reads))
               (cons (first TM)
                     (map TM perm)))))))
+
+(defn canonize
+  [TM]
+  (let [halt-state (count TM)]
+    (->> TM
+         (mapv (fn [reads]
+                 (mapv (fn [[write dir state :as spec]]
+                         (if (= halt-state state)
+                           [0 :left state]
+                           spec))
+                       reads)))
+         (TM-permutations)
+         (reduce (fn [tm1 tm2]
+                   (if (neg? (compare tm1 tm2))
+                     tm1
+                     tm2))))))
 
 (defn canonical?
   "Returns true if the states are labeled canonically, and halting
   actions always write 0 and move left."
   [TM]
-  (and (every? (fn [TM']
-                 (not (pos? (compare TM TM'))))
-               (TM-permutations TM))
-       (every? (fn [reads]
-                 (every? (fn [[write dir state]]
-                           (or (< state (count TM))
-                               (and (= write 0)
-                                    (= dir :left))))
-                         reads))
-               TM)))
+  (= TM (canonize TM)))

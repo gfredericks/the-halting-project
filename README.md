@@ -96,6 +96,8 @@ loop.
 |------:|:-------|:-------|
 |      0|0L0     |0L0     |
 
+(Machines `#2` and `#3` both have immediate loops)
+
 ### Uncanonical
 
 Machine `#4` can be ignored, since it is equivalent to machine `#2`
@@ -106,6 +108,8 @@ right).
 |------:|:-------|:-------|
 |      0|0L0     |0R1     |
 
+(Machines `#5` through `#8` are half uncanonical and half immediate
+loops)
 
 ### Halts Quickly
 
@@ -115,6 +119,9 @@ it.
 | State | Read 0 | Read 1 |
 |------:|:-------|:-------|
 |      0|0L1     |0L0     |
+
+(Machines `#10` through `#1792` consist of 1035 uncanonical machines,
+744 immediate loops, and 4 quick halters)
 
 ### Unreachable Halt State
 
@@ -126,6 +133,8 @@ its start state (`0`) to its halt state (`2`).
 |      0|0L1     |0L0     |
 |      1|0L0     |0L0     |
 
+(Machine `#1794` also has an unreachable halt state)
+
 ### Onelessness
 
 Machine `#1795` cannot halt because it only halts when reading a `1`,
@@ -135,6 +144,10 @@ but it never writes a `1`.
 |------:|:-------|:-------|
 |      0|0L1     |0L0     |
 |      1|0L0     |0L2     |
+
+(Machines `#1796` through `#1866` consist of 32 machines with an
+unreachable halt state, 27 uncanonical machines, 9 quick halters,
+and 3 oneless machines)
 
 ### Unidirectionality
 
@@ -148,15 +161,20 @@ keep reading `0`s.
 |      0|0L1     |0L0     |
 |      1|1L0     |0L2     |
 
+(Machines `#1868` through `#1914` consist of 24 machines with an
+unreachable halt state, 21 uncanonical machines, 1 quick halter
+and 1 unidirectional machine)
+
 ### Unknown
 
-Machine `#2189` presumably does not halt, but I haven't come up with
-a general method for proving it yet.
+Machine `#1915` presumably does not halt, but I haven't written code
+for proving it yet. The machine quickly transitions to an infinite
+loop of writing `1`s and moving right.
 
 | State | Read 0 | Read 1 |
 |------:|:-------|:-------|
-|      0|0L1     |0L2     |
-|      1|1R0     |0L0     |
+|      0|0L1     |0L0     |
+|      1|1R1     |0L2     |
 
 ## License
 

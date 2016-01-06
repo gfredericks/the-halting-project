@@ -58,7 +58,7 @@
                   steps' (inc steps)]
               (recur (case dir
                        :left [(first left) (rest left) (cons write right)]
-                       :right [(first right) (rest right) (cons write left)])
+                       :right [(first right) (cons write left) (rest right)])
                      state'
                      steps'))))))
 
@@ -110,3 +110,22 @@
 
         :else
         :unknown))
+
+(defn classification-summary
+  []
+  (->> (range)
+       (map (juxt identity machines/nat->machine))
+       (reduce (fn [{:keys [result seen] :as state} [n machine]]
+                 (let [class (classify machine)]
+                   (if (seen class)
+                     (if (-> result peek first (= :old))
+                       (update-in state [:result (dec (count result)) 1 class]
+                                  (fnil inc 0))
+                       (update state :result conj [:old {class 1}]))
+                     (cond-> {:result (conj result [:new class n machine])
+                              :seen (conj seen class)}
+                       (= :unknown class)
+                       (reduced)))))
+               {:result []
+                :seen #{}})
+       (:result)))
