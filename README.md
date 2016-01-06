@@ -83,8 +83,8 @@ of the smallest turing machine that requires that technique.
 
 ### By Definition
 
-Machine `#0` halts by definition, so there's nothing further to prove
-about it.
+Machine `#0` (the 0-state machine) halts by definition, so there's nothing further
+to prove about it.
 
 ### Immediate Loop
 
