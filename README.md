@@ -138,7 +138,7 @@ but it never writes a `1`.
 
 ### Unidirectionality
 
-Machine `#1867` should not halt because it is show by simulation to
+Machine `#1867` should not halt because it is shown by simulation to
 not halt within `N` steps, and its transition table shows that it
 always moves in the same direction when reading a `0`, so it will only
 keep reading `0`s.
@@ -151,7 +151,7 @@ keep reading `0`s.
 ### Unknown
 
 Machine `#2189` presumably does not halt, but I haven't come up with
-a general proof for it yet.
+a general method for proving it yet.
 
 | State | Read 0 | Read 1 |
 |------:|:-------|:-------|
