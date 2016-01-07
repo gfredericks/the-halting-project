@@ -25,6 +25,14 @@
     (rest rle)
     (->> rle rest (cons (update (first rle) 0 #(some-> % dec))))))
 
+(defn rle-take
+  [n rle]
+  (when (pos? n)
+    (lazy-seq
+     (cons (rle-first rle)
+           (rle-take (dec n)
+                     (rle-rest rle))))))
+
 ;;
 ;; Infinite tape; a zipper using the run-length encoding
 ;;
@@ -50,3 +58,18 @@
 (defn move-right
   [[left at right]]
   [(rle-cons at left) (rle-first right) (rle-rest right)])
+
+(defn context
+  "Returns an opaque value representing a subsection of the given
+  tape. Only useful for comparing to others for equality.
+
+  If steps-left or steps-right is nil, the entire infinite half
+  of the tape will be included."
+  [[left at right] steps-left steps-right]
+  [(if (nil? steps-left)
+     left
+     (rle-take steps-left left))
+   at
+   (if (nil? steps-right)
+     right
+     (rle-take steps-right right))])

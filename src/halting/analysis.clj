@@ -86,24 +86,14 @@
                      (states-last-seen [state (tapes/read tape)])]
               (if (= pos last-pos)
                 (= last-tape tape)
-                ;; TODO: rework the tape abstractions so I don't have
-                ;; to dig into the representation here
-                (let [take-rle (fn take-rle [n rle]
-                                 (when (pos? n)
-                                   (lazy-seq
-                                    (cons (#'tapes/rle-first rle)
-                                          (take-rle (dec n)
-                                                    (#'tapes/rle-rest rle))))))
-                      Δstep (- step last-step)]
+                (let [Δstep (- step last-step)]
                   (if (< pos last-pos)
                     ;; moving left
-                    (and (= (take 2 tape) (take 2 last-tape))
-                         (= (take-rle Δstep (last tape))
-                            (take-rle Δstep (last last-tape))))
+                    (= (tapes/context tape nil Δstep)
+                       (tapes/context last-tape nil Δstep))
                     ;; moving right
-                    (and (= (rest tape) (rest last-tape))
-                         (= (take-rle Δstep (first tape))
-                            (take-rle Δstep (first last-tape))))))))
+                    (= (tapes/context tape Δstep nil)
+                       (tapes/context last-tape Δstep nil))))))
             true
 
             :else
