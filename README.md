@@ -189,7 +189,7 @@ loopers, and 509 unidirectional machines)
 ### Unknown
 
 Machine `#1094873` gets into a sort of irregular loop that thwarts the
-loop detection algoritm described above. Needs more thought.
+loop detection algorithm described above. Needs more thought.
 
 | State | Read 0 | Read 1 |
 |------:|:-------|:-------|
