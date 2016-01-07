@@ -83,7 +83,7 @@
             false
 
             (if-let [{last-tape :tape, last-pos :pos, last-step :step}
-                     (states-last-seen state)]
+                     (states-last-seen [state (tapes/read tape)])]
               (if (= pos last-pos)
                 (= last-tape tape)
                 ;; TODO: rework the tape abstractions so I don't have
@@ -117,7 +117,7 @@
                      state'
                      step'
                      ((case dir :left dec :right inc) pos)
-                     (assoc states-last-seen state
+                     (assoc states-last-seen [state (tapes/read tape)]
                             {:tape tape :pos pos :step step})))))))
 
 (defn unidirectional?
