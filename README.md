@@ -165,16 +165,36 @@ keep reading `0`s.
 unreachable halt state, 21 uncanonical machines, 1 quick halter
 and 1 unidirectional machine)
 
-### Unknown
+### Eventual Loop
 
-Machine `#1915` presumably does not halt, but I haven't written code
-for proving it yet. The machine quickly transitions to an infinite
-loop of writing `1`s and moving right.
+Machine `#1915` quickly transitions to an infinite loop of writing
+`1`s and moving right, but it has an extra state transition at first
+which prevents the "Immediate Loop" check above from catching it.
+
+At this point we may as well also look for loops that have a period of
+multiple steps, which can be done by tracking the last time the
+machine was in the current state and comparing the old and new tapes
+for relevant similarities.
 
 | State | Read 0 | Read 1 |
 |------:|:-------|:-------|
 |      0|0L1     |0L0     |
 |      1|1R1     |0L2     |
+
+(Machines `#1916` through `#2188` consist of 123 uncanonical machines,
+70 machines with an unreachable halt state, 40 oneless machines,
+20 unidirectional machines, 19 equick halters, and one more eventual
+looper)
+
+### Unknown
+
+Machine `#2189` is so far unknown.
+
+| State | Read 0 | Read 1 |
+|------:|:-------|:-------|
+|      0|0L1     |0L2     |
+|      1|1R0     |0L0     |
+
 
 ## License
 

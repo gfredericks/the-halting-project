@@ -65,6 +65,61 @@
                      state'
                      steps'))))))
 
+(defn eventual-loop?
+  "Returns true if a loop can be detected in max-steps by
+  comparing the semi-local state of the tape with the last
+  time the machine was in the current state."
+  [TM max-steps]
+  (let [halt-state (count TM)]
+    (loop [tape tapes/zero-tape
+           state 0
+           step 0
+           pos 0
+           states-last-seen {}]
+      (cond (= halt-state state)
+            false
+
+            (= step max-steps)
+            false
+
+            (if-let [{last-tape :tape, last-pos :pos, last-step :step}
+                     (states-last-seen state)]
+              (if (= pos last-pos)
+                (= last-tape tape)
+                ;; TODO: rework the tape abstractions so I don't have
+                ;; to dig into the representation here
+                (let [take-rle (fn take-rle [n rle]
+                                 (when (pos? n)
+                                   (lazy-seq
+                                    (cons (#'tapes/rle-first rle)
+                                          (take-rle (dec n)
+                                                    (#'tapes/rle-rest rle))))))
+                      Δstep (- step last-step)]
+                  (if (< pos last-pos)
+                    ;; moving left
+                    (and (= (take 2 tape) (take 2 last-tape))
+                         (= (take-rle Δstep (last tape))
+                            (take-rle Δstep (last last-tape))))
+                    ;; moving right
+                    (and (= (rest tape) (rest last-tape))
+                         (= (take-rle Δstep (first tape))
+                            (take-rle Δstep (first last-tape))))))))
+            true
+
+            :else
+            (let [[write dir state'] (get-in TM [state (tapes/read tape)])
+                  step' (inc step)]
+              (recur (-> tape
+                         (tapes/write write)
+                         ((case dir
+                            :left tapes/move-left
+                            :right tapes/move-right)))
+                     state'
+                     step'
+                     ((case dir :left dec :right inc) pos)
+                     (assoc states-last-seen state
+                            {:tape tape :pos pos :step step})))))))
+
 (defn unidirectional?
   [TM]
   (->> TM
@@ -110,6 +165,9 @@
 
         (unidirectional? TM)
         :infinite-by-unidirectionality
+
+        (eventual-loop? TM (* 10 (count TM)))
+        :eventual-loop
 
         :else
         :unknown))
