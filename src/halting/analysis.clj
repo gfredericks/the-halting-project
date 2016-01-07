@@ -1,5 +1,6 @@
 (ns halting.analysis
-  (:require [halting.machines :as machines]))
+  (:require [halting.machines :as machines]
+            [halting.tapes :as tapes]))
 
 (defn reachable-states
   [TM]
@@ -44,7 +45,7 @@
   max-steps was reached without halting."
   [TM max-steps]
   (let [halt-state (count TM)]
-    (loop [[at left right] [0 (repeat 0) (repeat 0)]
+    (loop [tape tapes/zero-tape
            state 0
            steps 0]
       (cond (= halt-state state)
@@ -54,11 +55,13 @@
             nil
 
             :else
-            (let [[write dir state'] (get-in TM [state at])
+            (let [[write dir state'] (get-in TM [state (tapes/read tape)])
                   steps' (inc steps)]
-              (recur (case dir
-                       :left [(first left) (rest left) (cons write right)]
-                       :right [(first right) (cons write left) (rest right)])
+              (recur (-> tape
+                         (tapes/write write)
+                         ((case dir
+                            :left tapes/move-left
+                            :right tapes/move-right)))
                      state'
                      steps'))))))
 
