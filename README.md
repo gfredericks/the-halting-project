@@ -181,21 +181,21 @@ for relevant similarities.
 |      0|0L1     |0L0     |
 |      1|1R1     |0L2     |
 
-(Machines `#1916` through `#1094872` consist of 887331 uncanonical
-machines, 188256 immediate loopers, 11862 machines with an unreachable
-halt state, 3606 quick halters, 786 oneless machines, 607 eventual
-loopers, and 509 unidirectional machines)
+(Machines `#1916` through `#1251965` consist of 977730 uncanonical
+machines, 188256 immediate loopers, 63258 machines with an unreachable
+halt state, 10831 quick halters, 4392 eventual loopers, 3135
+unidirectional machines, and 2448 oneless machines)
 
 ### Unknown
 
-Machine `#1094873` gets into a sort of irregular loop that thwarts the
-loop detection algorithm described above. Needs more thought.
+Machine `#1251966` seems to have an increasing loop of some sort.  Oh
+boy!
 
 | State | Read 0 | Read 1 |
 |------:|:-------|:-------|
-|      0|0L1     |0L0     |
-|      1|0R2     |0L3     |
-|      2|1L1     |1L0     |
+|      0|0L1     |0L2     |
+|      1|1R0     |1L1     |
+|      2|0L3     |1R1     |
 
 
 ## License

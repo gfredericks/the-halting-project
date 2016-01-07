@@ -69,7 +69,7 @@
   "Returns true if a loop can be detected in max-steps by
   comparing the semi-local state of the tape with the last
   time the machine was in the current state."
-  [TM max-steps]
+  [TM max-steps window-size]
   (let [halt-state (count TM)]
     (loop [tape tapes/zero-tape
            state 0
@@ -83,7 +83,7 @@
             false
 
             (if-let [{last-tape :tape, last-pos :pos, last-step :step}
-                     (states-last-seen [state (tapes/read tape)])]
+                     (states-last-seen [state (tapes/context tape window-size window-size)])]
               (if (= pos last-pos)
                 (= last-tape tape)
                 (let [Δstep (- step last-step)]
@@ -107,7 +107,7 @@
                      state'
                      step'
                      ((case dir :left dec :right inc) pos)
-                     (assoc states-last-seen [state (tapes/read tape)]
+                     (assoc states-last-seen [state (tapes/context tape window-size window-size)]
                             {:tape tape :pos pos :step step})))))))
 
 (defn unidirectional?
@@ -156,7 +156,7 @@
         (unidirectional? TM)
         :infinite-by-unidirectionality
 
-        (eventual-loop? TM (* 10 (count TM)))
+        (eventual-loop? TM (* 100 (count TM)) 1)
         :eventual-loop
 
         :else
