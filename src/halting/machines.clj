@@ -128,3 +128,42 @@
   actions always write 0 and move left."
   [TM]
   (= TM (canonize TM)))
+
+(def greek
+  "αβγδεζηθικλμνξπρστυφχψω")
+
+(defn print-markdown
+  [machine]
+  (let [state-name (if (<= (count machine) (count greek))
+                     (mapv str greek)
+                     str)
+        state-name (fn [state] (if (= state (count machine))
+                                 "H"
+                                 (state-name state)))]
+    (println "| State | Read 0 | Read 1 |")
+    (println "|------:|:-------|:-------|")
+    (doseq [[[[write0 dir0 state0]
+              [write1 dir1 state1]]
+             state]
+            (map vector machine (range))]
+      (printf "|%7s|%d%s%-6s|%d%s%-6s|\n"
+              (state-name state)
+              write0 (case dir0 :left "L" :right "R")
+              (state-name state0)
+              write1 (case dir1 :left "L" :right "R")
+              (state-name state1)))))
+
+(defn print-morphett
+  "Prints the given machine in the syntax use at
+  http://morphett.info/turing/turing.html."
+  [machine]
+  (let [symbol ["_" "1"]]
+    (dotimes [state (count machine)]
+      (let [[[write0 dir0 state0]
+             [write1 dir1 state1]] (machine state)]
+        (printf "%d %s %s %s %s\n"
+                state (symbol 0) (symbol write0)
+                ({:left "l" :right "r"} dir0) (if (= (count machine) state0) "halt" state0))
+        (printf "%d %s %s %s %s\n"
+                state (symbol 1) (symbol write1)
+                ({:left "l" :right "r"} dir1) (if (= (count machine) state1) "halt" state1))))))
