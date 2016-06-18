@@ -191,11 +191,11 @@ unidirectional machines, and 2448 oneless machines)
 Machine `#1251966` seems to have an increasing loop of some sort.  Oh
 boy!
 
-| State | Read 0 | Read 1 |
-|------:|:-------|:-------|
-|      α|0Lβ     |0Lγ     |
-|      β|1Rα     |1Lβ     |
-|      γ|0LH     |1Rβ     |
+| State | Read 0 |      | Read 1 |      |
+|------:|:-------|:-----|--------|------|
+| **α** |←0      | **β**|←0      | **γ**|
+| **β** |1→      | **α**|←1      | **β**|
+| **γ** |←0      | **H**|1→      | **β**|
 
 
 ## License
