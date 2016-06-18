@@ -92,9 +92,9 @@ Machine `#1` cannot halt because its first transition is back to state
 `0` and so it will always read `0`s and is trivially in an infinite
 loop.
 
-| State | Read 0 | Read 1 |
-|------:|:-------|:-------|
-|      0|0L0     |0L0     |
+| State | Read 0      | Read 1      |
+|------:|:------------|:------------|
+| **α** | 0, ←, **α** | 0, ←, **α** |
 
 (Machines `#2` and `#3` both have immediate loops)
 
@@ -104,9 +104,9 @@ Machine `#4` can be ignored, since it is equivalent to machine `#2`
 (which, after reading a 1, moves left before halting instead of
 right).
 
-| State | Read 0 | Read 1 |
-|------:|:-------|:-------|
-|      0|0L0     |0R1     |
+| State | Read 0      | Read 1      |
+|------:|:------------|:------------|
+| **α** | 0, ←, **α** | 0, →, **H** |
 
 (Machines `#5` through `#8` are half uncanonical and half immediate
 loops)
@@ -116,9 +116,9 @@ loops)
 Machine `#9` halts after 1 step, which can be verified by simulating
 it.
 
-| State | Read 0 | Read 1 |
-|------:|:-------|:-------|
-|      0|0L1     |0L0     |
+| State | Read 0      | Read 1      |
+|------:|:------------|:------------|
+| **α** | 0, ←, **H** | 0, ←, **α** |
 
 (Machines `#10` through `#1792` consist of 1035 uncanonical machines,
 744 immediate loops, and 4 quick halters)
@@ -128,10 +128,10 @@ it.
 Machine `#1793` cannot halt because there is no transition path from
 its start state (`0`) to its halt state (`2`).
 
-| State | Read 0 | Read 1 |
-|------:|:-------|:-------|
-|      0|0L1     |0L0     |
-|      1|0L0     |0L0     |
+| State | Read 0      | Read 1      |
+|------:|:------------|:------------|
+| **α** | 0, ←, **β** | 0, ←, **α** |
+| **β** | 0, ←, **α** | 0, ←, **α** |
 
 (Machine `#1794` also has an unreachable halt state)
 
@@ -140,10 +140,10 @@ its start state (`0`) to its halt state (`2`).
 Machine `#1795` cannot halt because it only halts when reading a `1`,
 but it never writes a `1`.
 
-| State | Read 0 | Read 1 |
-|------:|:-------|:-------|
-|      0|0L1     |0L0     |
-|      1|0L0     |0L2     |
+| State | Read 0      | Read 1      |
+|------:|:-----------:|:------------|
+| **α** | 0, ←, **β** | 0, ←, **α** |
+| **β** | 0, ←, **α** | 0, ←, **H** |
 
 (Machines `#1796` through `#1866` consist of 32 machines with an
 unreachable halt state, 27 uncanonical machines, 9 quick halters,
@@ -156,10 +156,10 @@ not halt within `N` steps, and its transition table shows that it
 always moves in the same direction when reading a `0`, so it will only
 keep reading `0`s.
 
-| State | Read 0 | Read 1 |
-|------:|:-------|:-------|
-|      0|0L1     |0L0     |
-|      1|1L0     |0L2     |
+| State | Read 0      | Read 1      |
+|------:|:------------|:------------|
+| **α** | 0, ←, **β** | 0, ←, **α** |
+| **β** | 1, ←, **α** | 0, ←, **H** |
 
 (Machines `#1868` through `#1914` consist of 24 machines with an
 unreachable halt state, 21 uncanonical machines, 1 quick halter
@@ -176,10 +176,10 @@ multiple steps, which can be done by tracking the last time the
 machine was in the current state and comparing the old and new tapes
 for relevant similarities.
 
-| State | Read 0 | Read 1 |
-|------:|:-------|:-------|
-|      0|0L1     |0L0     |
-|      1|1R1     |0L2     |
+| State | Read 0      | Read 1      |
+|------:|:------------|:------------|
+| **α** | 0, ←, **β** | 0, ←, **α** |
+| **β** | 1, →, **β** | 0, ←, **H** |
 
 (Machines `#1916` through `#1251965` consist of 977730 uncanonical
 machines, 188256 immediate loopers, 63258 machines with an unreachable
@@ -191,12 +191,11 @@ unidirectional machines, and 2448 oneless machines)
 Machine `#1251966` seems to have an increasing loop of some sort.  Oh
 boy!
 
-| State | Read 0 |      | Read 1 |      |
-|------:|:-------|:-----|--------|------|
-| **α** |←0      | **β**|←0      | **γ**|
-| **β** |1→      | **α**|←1      | **β**|
-| **γ** |←0      | **H**|1→      | **β**|
-
+| State | Read 0      | Read 1      |
+|------:|:------------|:------------|
+| **α** | 0, ←, **β** | 0, ←, **γ** |
+| **β** | 1, →, **α** | 1, ←, **β** |
+| **γ** | 0, ←, **H** | 1, →, **β** |
 
 ## License
 

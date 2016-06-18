@@ -140,17 +140,21 @@
         state-name (fn [state] (if (= state (count machine))
                                  "H"
                                  (state-name state)))]
-    (println "| State | Read 0 | Read 1 |")
-    (println "|------:|:-------|:-------|")
+    (println "| State | Read 0 |       | Read 1 |       |")
+    (println "|------:|:-------|:------|:-------|-------|")
     (doseq [[[[write0 dir0 state0]
               [write1 dir1 state1]]
              state]
             (map vector machine (range))]
-      (printf "|%7s|%d%s%-6s|%d%s%-6s|\n"
+      (printf "| **%s** | %s     | **%s** | %s     | **%s** |\n"
               (state-name state)
-              write0 (case dir0 :left "L" :right "R")
+              (case dir0
+                :left  (str \← write0)
+                :right (str write0 \→))
               (state-name state0)
-              write1 (case dir1 :left "L" :right "R")
+              (case dir1
+                :left  (str \← write1)
+                :right (str write1 \→))
               (state-name state1)))))
 
 (defn print-morphett
